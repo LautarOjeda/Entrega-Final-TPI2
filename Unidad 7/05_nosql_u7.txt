@@ -1,0 +1,96 @@
+Script de insercion "db.pedidos.insertMany"
+
+db.pedidos.insertMany([
+  {
+    "pedido_id": 1,
+    "fecha_pedido": ISODate("2026-01-12T13:20:00Z"),
+    "estado_pedido": "ENTREGADO",
+    "metodo_pago": { "metodopago_id": 1, "nombre": "Efectivo" },
+    "cliente": {
+      "cliente_id": 1,
+      "nombre": "Juan",
+      "apellido": "Pérez",
+      "email": "juan.perez@email.com",
+      "telefono": "+5491155551111",
+      "direccion": "Av. Corrientes 1234, CABA"
+    },
+    "items": [
+      { "producto_id": 1, "nombre": "Hamburguesa Clásica con Queso", "categoria": "Comida Rápida", "cantidad": 1, "precio_unitario": 8500.00, "subtotal": 8500.00 },
+      { "producto_id": 6, "nombre": "Coca-Cola 500ml", "categoria": "Bebidas", "cantidad": 1, "precio_unitario": 2200.00, "subtotal": 2200.00 }
+    ],
+    "total": 10700.00
+  },
+  {
+    "pedido_id": 2,
+    "fecha_pedido": ISODate("2026-01-15T21:00:00Z"),
+    "estado_pedido": "ENTREGADO",
+    "metodo_pago": { "metodopago_id": 2, "nombre": "Tarjeta de Crédito" },
+    "cliente": {
+      "cliente_id": 2,
+      "nombre": "María",
+      "apellido": "Gómez",
+      "email": "maria.gomez@email.com",
+      "telefono": "+5491155552222",
+      "direccion": "Belgrano 456, Córdoba"
+    },
+    "items": [
+      { "producto_id": 18, "nombre": "Milanesa a la Napolitana con Papas", "categoria": "Platos Principales", "cantidad": 1, "precio_unitario": 12500.00, "subtotal": 12500.00 },
+      { "producto_id": 7, "nombre": "Agua Mineral 500ml", "categoria": "Bebidas", "cantidad": 1, "precio_unitario": 1800.00, "subtotal": 1800.00 }
+    ],
+    "total": 14300.00
+  },
+  {
+    "pedido_id": 5,
+    "fecha_pedido": ISODate("2026-01-25T12:45:00Z"),
+    "estado_pedido": "CANCELADO",
+    "metodo_pago": { "metodopago_id": 1, "nombre": "Efectivo" },
+    "cliente": {
+      "cliente_id": 5,
+      "nombre": "Lucas",
+      "apellido": "Rodríguez",
+      "email": "lucas.rodriguez@email.com",
+      "telefono": "+5491155555555",
+      "direccion": "Mitre 654, La Plata"
+    },
+    "items": [
+      { "producto_id": 3, "nombre": "Papas Fritas Cheddar y Panceta", "categoria": "Comida Rápida", "cantidad": 1, "precio_unitario": 5500.00, "subtotal": 5500.00 }
+    ],
+    "total": 5500.00
+  },
+  {
+    "pedido_id": 17,
+    "fecha_pedido": ISODate("2026-03-03T12:30:00Z"),
+    "estado_pedido": "EN_PREPARACION",
+    "metodo_pago": { "metodopago_id": 1, "nombre": "Efectivo" },
+    "cliente": {
+      "cliente_id": 3,
+      "nombre": "Carlos",
+      "apellido": "López",
+      "email": "carlos.lopez@email.com",
+      "telefono": "+5491155553333",
+      "direccion": "San Martín 789, Mendoza"
+    },
+    "items": [
+      { "producto_id": 19, "nombre": "Bife de Chorzo con Guarnición", "categoria": "Platos Principales", "cantidad": 1, "precio_unitario": 16000.00, "subtotal": 16000.00 },
+      { "producto_id": 7, "nombre": "Agua Mineral 500ml", "categoria": "Bebidas", "cantidad": 1, "precio_unitario": 1000.00, "subtotal": 1000.00 }
+    ],
+    "total": 17000.00
+  }
+]);
+
+Consultas documentales:
+
+db.pedidos.find({ "cliente.email": "juan.perez@email.com" });
+
+db.pedidos.aggregate([
+  {
+    $group: {
+      _id: "$estado_pedido",
+      total_recaudado: { $sum: "$total" },
+      cantidad_pedidos: { $sum: 1 }
+    }
+  },
+  {
+    $sort: { total_recaudado: -1 }
+  }
+]);
